@@ -1,10 +1,22 @@
 import { useState, useEffect } from 'react'
 
 import Note from './components/Note'
-import Notification from './components/Notification'
+
 import Footer from './components/Footer'
 import noteService from './services/notes'
+import axios from 'axios'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
 const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
@@ -12,10 +24,10 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
+    axios
+      .get('http://localhost:3001/api/notes')
+      .then(res => {
+        setNotes(res.data)
       })
   }, [])
 
